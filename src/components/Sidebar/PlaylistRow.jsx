@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
-import { playlistAtom } from '../recoil/atoms';
+import { playlistAtom } from '../../recoil/atoms';
 
 const PlaylistRow = ({ title, playlistId }) => {
   //state from recoil

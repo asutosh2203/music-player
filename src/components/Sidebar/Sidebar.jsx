@@ -1,9 +1,9 @@
 import { useQuery } from '@apollo/client';
 
-import spotify_small from '../assets/spotify_small.png';
-import { GET_PLAYLISTS } from '../queries/getQueries';
+import spotify_small from '../../assets/spotify_small.png';
+import { GET_PLAYLISTS } from '../../queries/getQueries';
 
-import Spinner from './Spinner';
+import Spinner from '../Spinner';
 import PlaylistRow from './PlaylistRow';
 
 const Sidebar = () => {

@@ -3,10 +3,10 @@ import { useQuery } from '@apollo/client';
 import { CiSearch } from 'react-icons/ci';
 import { useRecoilValue } from 'recoil';
 
-import { GET_SONGS } from '../queries/getQueries';
-import { playlistAtom } from '../recoil/atoms';
+import { GET_SONGS } from '../../queries/getQueries';
+import { playlistAtom } from '../../recoil/atoms';
 
-import Spinner from './Spinner';
+import Spinner from '../Spinner';
 import SongRow from './SongRow';
 
 const SongsList = () => {
