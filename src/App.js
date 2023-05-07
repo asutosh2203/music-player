@@ -1,5 +1,5 @@
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
-import { Sidebar, SongsList } from './components';
+import { Sidebar, SongsList, Player } from './components';
 
 function App() {
   const client = new ApolloClient({
@@ -13,7 +13,7 @@ function App() {
         <div className='flex bg-black text-white h-screen'>
           <Sidebar />
           <SongsList />
-          {/* Player */}
+          <Player/>
         </div>
       </ApolloProvider>
     </>

@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { CiSearch } from 'react-icons/ci';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { GET_SONGS } from '../../queries/getQueries';
-import { playlistAtom } from '../../recoil/atoms';
+import { playlistAtom, songsListAtom } from '../../recoil/atoms';
 
 import Spinner from '../Spinner';
 import SongRow from './SongRow';
@@ -12,6 +12,7 @@ import SongRow from './SongRow';
 const SongsList = () => {
   //state from recoil
   const playlist = useRecoilValue(playlistAtom);
+  const setSongsList = useSetRecoilState(songsListAtom);
 
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
@@ -24,8 +25,8 @@ const SongsList = () => {
   });
 
   useEffect(() => {
-    setSearch('');
-  }, []);
+    !loading && setSongsList({ songs: data.getSongs });
+  }, [data]);
 
   if (error) return <p>Something went wrong: {error.message}</p>;
 
