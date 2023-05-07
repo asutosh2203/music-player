@@ -13,22 +13,23 @@ const Sidebar = () => {
     <div className='h-full flex-[0.15] flex flex-col justify-between py-8 px-5'>
       <div>
         <img alt='logo' className='pb-7' src={spotify_small} width={'70%'} />{' '}
-        <Spinner loading={loading} color={'blue'} size={10} />
+        {/* <Spinner loading={loading} color={'blue'} size={10} /> */}
         <div className='flex flex-col space-y-7 w-full'>
           {!loading &&
             data.getPlaylists.map((playlist) => (
-              <PlaylistRow key={playlist.id} title={playlist.title} />
+              <PlaylistRow
+                key={playlist.id}
+                title={playlist.title}
+                playlistId={playlist.id}
+              />
             ))}
         </div>
       </div>
-      <div className='w-full flex items-center space-x-5 cursor-pointer'>
-        <img
-          alt='profile-pic'
-          src='https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg'
-          className='h-12 w-12 rounded-full'
-        />
-        <p>Katherine Langford</p>
-      </div>
+      <img
+        alt='profile-pic'
+        src='https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg'
+        className='h-12 w-12 rounded-full cursor-pointer'
+      />
     </div>
   );
 };

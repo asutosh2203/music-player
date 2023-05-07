@@ -1,14 +1,25 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 
-const PlaylistRow = ({ title }) => {
+import { playlistAtom } from '../recoil/atoms';
+
+const PlaylistRow = ({ title, playlistId }) => {
+  //state from recoil
+  const [playlist, setPlaylist] = useRecoilState(playlistAtom);
+
   const [isSelected, setIsSelected] = useState(false);
+
+  useEffect(() => {
+    setIsSelected(playlist.id == playlistId);
+  }, [playlist]);
+
   return (
     <div
       className={`${
-        isSelected ? 'text-white' : 'text-gray-400'
+        isSelected ? 'text-white' : 'text-gray-400/[0.8]'
       } text-lg hover:text-white cursor-pointer `}
       onClick={() => {
-        setIsSelected((prevState) => !prevState);
+        setPlaylist({ id: playlistId, title });
       }}
     >
       {title}

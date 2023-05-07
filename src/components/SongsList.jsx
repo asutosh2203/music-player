@@ -1,50 +1,72 @@
+import { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
+import { CiSearch } from 'react-icons/ci';
+import { useRecoilValue } from 'recoil';
+
 import { GET_SONGS } from '../queries/getQueries';
-import { useState } from 'react';
+import { playlistAtom } from '../recoil/atoms';
+
+import Spinner from './Spinner';
+import SongRow from './SongRow';
 
 const SongsList = () => {
+  //state from recoil
+  const playlist = useRecoilValue(playlistAtom);
+
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
 
   const { loading, error, data } = useQuery(GET_SONGS, {
-    variables: { playlistId: 1, search },
+    variables: {
+      playlistId: playlist.id,
+      search,
+    },
   });
+
+  useEffect(() => {
+    setSearch('');
+  }, []);
 
   if (error) return <p>Something went wrong: {error.message}</p>;
 
   return (
-    <div className='flex-[0.35] bg-gray-800'>
-      {loading ? (
-        <p>Loading</p>
-      ) : (
-        !loading &&
-        !error &&
-        (data.getSongs.length <= 0 ? (
-          <p>No Songs Found</p>
-        ) : (
-          data.getSongs.map((song) => (
-            <div key={song._id} className=''>
-              <a href={song.url}>{song.title}</a>
-              <br />
-            </div>
-          ))
-        ))
+    <div className='flex-[0.3]'>
+      {loading && (
+        <div className='h-screen flex items-center justify-center'>
+          <Spinner loading={loading} color={'blue'} size={20} />
+        </div>
       )}
-      <input
-        type='text'
-        value={searchInput}
-        onChange={(e) => {
-          setSearchInput(e.target.value);
-        }}
-        placeholder='Search Songs'
-      />
-      <button
-        onClick={() => {
-          setSearch(searchInput);
-        }}
-      >
-        Search
-      </button>
+
+      {!loading && !error && (
+        <div className='h-screen overflow-scroll'>
+          <div className='text-4xl py-6 font-bold capitalize'>
+            {playlist.title}
+          </div>
+          <div className='bg-white/[0.15] flex items-center justify-between px-3 py-2 rounded-md my-5'>
+            <input
+              type='text'
+              value={searchInput}
+              onChange={(e) => {
+                setSearchInput(e.target.value);
+              }}
+              placeholder='Search Songs, Artists'
+              className='focus:outline-none bg-transparent flex-1'
+            />
+            <button
+              onClick={() => {
+                setSearch(searchInput);
+              }}
+            >
+              <CiSearch />
+            </button>
+          </div>
+          {data.getSongs.length <= 0 ? (
+            <p>No Songs</p>
+          ) : (
+            data.getSongs.map((song) => <SongRow key={song._id} song={song} />)
+          )}
+        </div>
+      )}
     </div>
   );
 };
