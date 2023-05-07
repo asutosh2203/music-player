@@ -1,11 +1,22 @@
-
-import './App.css';
+import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
+import { Sidebar, SongsList } from './components';
 
 function App() {
+  const client = new ApolloClient({
+    uri: 'https://api.ss.dev/resource/api',
+    cache: new InMemoryCache({}),
+  });
+
   return (
-    <div className="App">
-      
-    </div>
+    <>
+      <ApolloProvider client={client}>
+        <div className='flex bg-black text-white h-screen'>
+          <Sidebar />
+          <SongsList />
+          {/* Player */}
+        </div>
+      </ApolloProvider>
+    </>
   );
 }
 
