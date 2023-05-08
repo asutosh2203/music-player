@@ -1,7 +1,5 @@
 import { atom } from 'recoil';
 
-import no_song from '../assets/no_song.webp';
-
 export const playlistAtom = atom({
   key: 'playlist',
   default: { __typename: 'Playlist', id: 1, title: 'For You' },
@@ -21,12 +19,35 @@ export const songAtom = atom({
 
     _id: '61b6f14dc2f7cafd968c31f0',
     isPlaying: false,
+    audioElem: null,
   },
 });
 
 export const songsListAtom = atom({
-  key: 'sngsList',
+  key: 'songsList',
   default: {
     songs: [],
+  },
+});
+
+export const searchAtom = atom({
+  key: 'searchItem',
+  default: {
+    search: '',
+  },
+});
+
+export const errorAtom = atom({
+  key: 'errorState',
+  default: {
+    state: false,
+    message: '',
+  },
+});
+
+export const bgAtom = atom({
+  key: 'background',
+  default: {
+    color: '#000000',
   },
 });

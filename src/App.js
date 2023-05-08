@@ -1,5 +1,5 @@
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
-import { Sidebar, SongsList, Player } from './components';
+import { Sidebar, SongsListWrapper, Player } from './components';
 
 function App() {
   const client = new ApolloClient({
@@ -10,10 +10,13 @@ function App() {
   return (
     <>
       <ApolloProvider client={client}>
-        <div className='flex bg-black text-white h-screen'>
+        <div
+          style={{ backgroundColor: 'black' }}
+          className='flex text-white h-screen'
+        >
           <Sidebar />
-          <SongsList />
-          <Player/>
+          <SongsListWrapper />
+          <Player />
         </div>
       </ApolloProvider>
     </>

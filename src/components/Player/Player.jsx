@@ -1,20 +1,36 @@
-import { useRecoilState } from 'recoil';
-
-import { songAtom } from '../../recoil/atoms';
-import PlayerConsole from './PlayerConsole';
 import { useEffect, useRef } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+
+import { bgAtom, errorAtom, songAtom } from '../../recoil/atoms';
+import no_song from '../../assets/no_song.webp';
+
+import PlayerConsole from './PlayerConsole';
 
 const Player = () => {
   const [currentSong, setCurrentSong] = useRecoilState(songAtom);
+  const error = useRecoilValue(errorAtom);
+  const background = useRecoilValue(bgAtom);
+
   const audioRef = useRef();
 
   useEffect(() => {
     if (currentSong.isPlaying) {
-      audioRef.current.play();
+      audioRef.current?.play();
     } else {
-      audioRef.current.pause();
+      audioRef.current?.pause();
     }
   }, [currentSong.isPlaying]);
+
+  useEffect(() => {
+    setCurrentSong((prevState) => {
+      return { ...prevState, audioElem: audioRef };
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!isNaN(currentSong.audioElem?.current.currentTime))
+      audioRef.current.currentTime = currentSong.audioElem?.current.currentTime;
+  }, [currentSong.audioElem]);
 
   const onPlaying = () => {
     const duration = audioRef.current.duration;
@@ -27,18 +43,25 @@ const Player = () => {
 
   return (
     <div className='flex-[0.55] h-screen'>
-      <audio ref={audioRef} src={currentSong.url} onTimeUpdate={onPlaying} />
+      {!error.state && (
+        <audio ref={audioRef} src={currentSong.url} onTimeUpdate={onPlaying} />
+      )}
+
       <div className='max-w-[50%] mx-auto flex flex-col h-full justify-center space-y-10'>
         <div>
           <h1 className='text-4xl font-bold capitalize'>
-            {!currentSong.title ? 'No song is playing' : currentSong.title}
+            {!currentSong.title || error.state
+              ? 'No song is playing'
+              : currentSong.title}
           </h1>
           <h4 className='pt-2 text-gray-300'>
-            {!currentSong.artist ? 'Artist name' : currentSong.artist}
+            {!currentSong.artist || error.state
+              ? 'Artist name'
+              : currentSong.artist}
           </h4>
         </div>
         <img
-          src={currentSong.photo}
+          src={error.state ? no_song : currentSong.photo}
           alt='song-cover'
           className='rounded-md object-cover'
         />

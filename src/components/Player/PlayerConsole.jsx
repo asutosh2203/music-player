@@ -8,22 +8,15 @@ import {
   BsPauseCircleFill,
 } from 'react-icons/bs';
 
-import { songAtom, songsListAtom } from '../../recoil/atoms';
-import { useEffect, useRef } from 'react';
+import { errorAtom, songAtom, songsListAtom } from '../../recoil/atoms';
+import {  useRef } from 'react';
 
 const PlayerConsole = ({ audio }) => {
   const [currentSong, setCurrentSong] = useRecoilState(songAtom);
   const songsList = useRecoilValue(songsListAtom).songs;
+  const error = useRecoilValue(errorAtom);
 
   const clickRef = useRef(null);
-
-  // useEffect(() => {
-  //   if (!currentSong.isPlaying) {
-  //     audioRef.current.play();
-  //   } else {
-  //     audioRef.current.pause();
-  //   }
-  // }, [currentSong]);
 
   const playPauseHandler = () => {
     setCurrentSong((prevState) => {
@@ -79,49 +72,76 @@ const PlayerConsole = ({ audio }) => {
 
   const setVolume = (e) => {};
 
-  const controllerIconClass = 'h-6 w-6 m-3 cursor-pointer ';
+  const controllerIconClass = 'h-6 w-6 m-3 ';
   return (
     <div>
-      <div className='navigation w-full mb-5'>
+      <div className='w-full mb-5'>
         <div
-          className='navigation_wrapper min-w-full bg-[#777777]/[0.85] h-[5px] rounded-3xl cursor-pointer'
+          className='min-w-full bg-[#777777]/[0.75] h-[5px] rounded-3xl cursor-pointer'
           onClick={checkWidth}
           ref={clickRef}
         >
           <div
-            className='seek_bar w-1/2 h-full bg-white rounded-3xl'
+            className='w-1/2 h-full bg-white rounded-3xl'
             style={{ width: `${currentSong.progress + '%'}` }}
           ></div>
         </div>
       </div>
       <div className='flex items-center justify-between'>
-        <div className='bg-gray-700/50 rounded-full cursor-pointer'>
-          <BsThreeDots className={controllerIconClass} />
-        </div>
-        <div className='flex items-center'>
-          <BsSkipBackwardFill
-            className={controllerIconClass + 'text-gray-400'}
-            onClick={skipBack}
-          />
-          {currentSong.isPlaying ? (
-            <BsPauseCircleFill
-              className='h-12 w-12 m-5 cursor-pointer'
-              onClick={playPauseHandler}
+        {!error.state && (
+          <div className='bg-gray-700/50 rounded-full cursor-pointer'>
+            <BsThreeDots className={controllerIconClass} />
+          </div>
+        )}
+        <div
+          className={`flex items-center ${
+            error.state && 'w-full justify-center'
+          }`}
+        >
+          <button
+            disabled={error.state}
+            className='disabled:cursor-not-allowed'
+          >
+            <BsSkipBackwardFill
+              className={controllerIconClass + 'text-gray-400'}
+              onClick={skipBack}
             />
+          </button>
+          {!error.state && currentSong.isPlaying ? (
+            <button
+              disabled={error.state}
+              className='disabled:cursor-not-allowed'
+            >
+              <BsPauseCircleFill
+                className='h-12 w-12 m-5'
+                onClick={playPauseHandler}
+              />
+            </button>
           ) : (
-            <BsPlayCircleFill
-              className='h-12 w-12 m-5 cursor-pointer'
-              onClick={playPauseHandler}
-            />
+            <button
+              disabled={error.state}
+              className='disabled:cursor-not-allowed'
+            >
+              <BsPlayCircleFill
+                className='h-12 w-12 m-5'
+                onClick={playPauseHandler}
+              />
+            </button>
           )}
-          <BsFillSkipForwardFill
-            className={controllerIconClass + 'text-gray-400'}
-            onClick={skipForward}
-          />
+          <button
+            disabled={error.state}
+            className='disabled:cursor-not-allowed'
+          >
+            <BsFillSkipForwardFill
+              className={controllerIconClass + 'text-gray-400'}
+              onClick={skipForward}
+            />
+          </button>
         </div>
-        <div className='bg-gray-700/50 rounded-full'>
-          <BsVolumeUpFill className={controllerIconClass} />
-          {/* <input
+        {!error.state && (
+          <div className='bg-gray-700/50 rounded-full cursor-pointer'>
+            <BsVolumeUpFill className={controllerIconClass} />
+            {/* <input
             type='range'
             defaultValue='50'
             className='mx-2 progressBarvolume bar volume'
@@ -129,7 +149,8 @@ const PlayerConsole = ({ audio }) => {
               audio.current.volume = e.target.value / 100;
             }}
           /> */}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

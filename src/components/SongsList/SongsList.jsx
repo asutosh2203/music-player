@@ -1,74 +1,63 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useQuery } from '@apollo/client';
-import { CiSearch } from 'react-icons/ci';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { GET_SONGS } from '../../queries/getQueries';
-import { playlistAtom, songsListAtom } from '../../recoil/atoms';
+import {
+  playlistAtom,
+  searchAtom,
+  songsListAtom,
+  errorAtom,
+} from '../../recoil/atoms';
 
 import Spinner from '../Spinner';
 import SongRow from './SongRow';
+import Error from '../Error';
 
 const SongsList = () => {
   //state from recoil
   const playlist = useRecoilValue(playlistAtom);
+  const searchItem = useRecoilValue(searchAtom);
   const setSongsList = useSetRecoilState(songsListAtom);
-
-  const [searchInput, setSearchInput] = useState('');
-  const [search, setSearch] = useState('');
+  const setError = useSetRecoilState(errorAtom);
 
   const { loading, error, data } = useQuery(GET_SONGS, {
     variables: {
       playlistId: playlist.id,
-      search,
+      search: searchItem.search,
     },
   });
 
+  if (error) {
+    setError((prevState) => {
+      return { ...prevState, state: true, message: error.message };
+    });
+  }
+
   useEffect(() => {
-    !loading && setSongsList({ songs: data.getSongs });
+    !loading && !error && setSongsList({ songs: data?.getSongs });
   }, [data]);
 
-  if (error) return <p>Something went wrong: {error.message}</p>;
-
-  return (
-    <div className='flex-[0.3]'>
+  return error ? (
+    <Error errorMessage={'fetching the songs from the playlist'} />
+  ) : (
+    <>
       {loading && (
-        <div className='h-screen flex items-center justify-center'>
-          <Spinner loading={loading} color={'blue'} size={20} />
+        <div className='h-[80%] flex items-center justify-center'>
+          <Spinner loading={loading} color={'white'} />
         </div>
       )}
 
       {!loading && !error && (
-        <div className='h-screen overflow-scroll'>
-          <div className='text-4xl py-6 font-bold capitalize'>
-            {playlist.title}
-          </div>
-          <div className='bg-white/[0.15] flex items-center justify-between px-3 py-2 rounded-md my-5'>
-            <input
-              type='text'
-              value={searchInput}
-              onChange={(e) => {
-                setSearchInput(e.target.value);
-              }}
-              placeholder='Search Songs, Artists'
-              className='focus:outline-none bg-transparent flex-1'
-            />
-            <button
-              onClick={() => {
-                setSearch(searchInput);
-              }}
-            >
-              <CiSearch />
-            </button>
-          </div>
+        <>
           {data.getSongs.length <= 0 ? (
-            <p>No Songs</p>
+            <p className='text-center text-2xl mt-10'>No Songs Found ♪</p>
           ) : (
             data.getSongs.map((song) => <SongRow key={song._id} song={song} />)
           )}
-        </div>
+        </>
       )}
-    </div>
+    </>
   );
 };
 
