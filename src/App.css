@@ -1,3 +1,45 @@
-.App{
-    
+.App {
+}
+
+@media screen and (max-width: 1000px) {
+  .sidebar {
+    position: fixed;
+    width: 20rem;
+  }
+
+  .songsListWrapper {
+    flex: 0.4;
+    padding-left: 20px;
+  }
+
+  .player {
+    flex: 0.6;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .sidebarMob {
+    width: calc(100% + 40px);
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .songsListWrapper {
+    display: none;
+  }
+
+  .player {
+    flex: 1;
+  }
+
+  .songTitle {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .songDetails {
+    text-align: center;
+  }
 }
