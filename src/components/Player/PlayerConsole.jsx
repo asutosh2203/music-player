@@ -9,7 +9,7 @@ import {
 } from 'react-icons/bs';
 
 import { errorAtom, songAtom, songsListAtom } from '../../recoil/atoms';
-import {  useRef } from 'react';
+import { useRef } from 'react';
 
 const PlayerConsole = ({ audio }) => {
   const [currentSong, setCurrentSong] = useRecoilState(songAtom);
@@ -74,7 +74,7 @@ const PlayerConsole = ({ audio }) => {
 
   const controllerIconClass = 'h-6 w-6 m-3 ';
   return (
-    <div>
+    <div className='w-full'>
       <div className='w-full mb-5'>
         <div
           className='min-w-full bg-[#777777]/[0.75] h-[5px] rounded-3xl cursor-pointer'

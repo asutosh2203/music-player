@@ -1,10 +1,10 @@
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
-import {  errorAtom, songAtom } from '../../recoil/atoms';
+import { errorAtom, songAtom } from '../../recoil/atoms';
 
 const SongRow = ({ song }) => {
   // State from Recoil
-  const setCurrentSong = useSetRecoilState(songAtom);
+  const [currentSong, setCurrentSong] = useRecoilState(songAtom);
   const setErrorState = useSetRecoilState(errorAtom);
 
   const mins = Math.floor(song.duration / 60);
@@ -27,9 +27,13 @@ const SongRow = ({ song }) => {
     setErrorState({ state: false, message: '' });
   };
 
+  const isCurrentSong = currentSong._id == song._id;
+
   return (
     <div
-      className='flex items-center p-4 rounded-lg cursor-pointer hover:bg-gray-400/[0.2]'
+      className={`flex items-center p-4 rounded-lg cursor-pointer
+      ${isCurrentSong && 'bg-gray-400/[0.4]'}
+      ${!isCurrentSong && 'hover:bg-gray-400/[0.2]'}`}
       onClick={changeSong}
     >
       <div className='flex flex-1 space-x-4'>
@@ -39,7 +43,7 @@ const SongRow = ({ song }) => {
           alt='song-pic'
         />
         <div>
-          <p className='font-bold'>{song.title}</p>
+          <p className='font-bold text-sm'>{song.title}</p>
           <p className='text-sm text-gray-400'>{song.artist}</p>
         </div>
       </div>

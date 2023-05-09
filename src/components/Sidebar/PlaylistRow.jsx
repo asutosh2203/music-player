@@ -16,7 +16,7 @@ const PlaylistRow = ({ title, playlistId }) => {
   return (
     <div
       className={`${
-        isSelected ? 'text-white' : 'text-gray-400/[0.8]'
+        isSelected ? 'text-white' : 'text-gray-300/[0.8]'
       } text-lg hover:text-white cursor-pointer `}
       onClick={() => {
         setPlaylist({ id: playlistId, title });

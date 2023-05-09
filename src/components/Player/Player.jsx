@@ -5,11 +5,12 @@ import { bgAtom, errorAtom, songAtom } from '../../recoil/atoms';
 import no_song from '../../assets/no_song.webp';
 
 import PlayerConsole from './PlayerConsole';
+import { usePalette } from 'react-palette';
 
 const Player = () => {
   const [currentSong, setCurrentSong] = useRecoilState(songAtom);
   const error = useRecoilValue(errorAtom);
-  const background = useRecoilValue(bgAtom);
+  const [background, setBackground] = useRecoilState(bgAtom);
 
   const audioRef = useRef();
 
@@ -27,6 +28,12 @@ const Player = () => {
     });
   }, []);
 
+  const { data, loading } = usePalette(currentSong.photo);
+
+  useEffect(() => {
+    !loading && setBackground({ color: data.darkVibrant });
+  }, [data]);
+
   useEffect(() => {
     if (!isNaN(currentSong.audioElem?.current.currentTime))
       audioRef.current.currentTime = currentSong.audioElem?.current.currentTime;
@@ -42,13 +49,13 @@ const Player = () => {
   };
 
   return (
-    <div className='flex-[0.55] h-screen'>
+    <div className='player flex-[0.55] h-screen overflow-scroll p-5'>
       {!error.state && (
         <audio ref={audioRef} src={currentSong.url} onTimeUpdate={onPlaying} />
       )}
 
-      <div className='max-w-[50%] mx-auto flex flex-col h-full justify-center space-y-10'>
-        <div>
+      <div className='max-w-[50%] min-w-[17.5rem] mx-auto flex flex-col h-full justify-center space-y-10'>
+        <div className='songDetails'>
           <h1 className='text-4xl font-bold capitalize'>
             {!currentSong.title || error.state
               ? 'No song is playing'

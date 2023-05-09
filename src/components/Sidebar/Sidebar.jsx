@@ -5,28 +5,14 @@ import { GET_PLAYLISTS } from '../../queries/getQueries';
 
 import PlaylistRow from './PlaylistRow';
 import Error from '../Error';
+import React, { useState } from 'react';
 
-const Sidebar = () => {
-  const { loading, error, data } = useQuery(GET_PLAYLISTS);
-
+const Wrapper = ({ children }) => {
   return (
-    <div className='h-full flex-[0.15] flex flex-col justify-between py-8 px-5'>
+    <div className='sidebar h-full flex-[0.15] flex flex-col justify-between py-8 px-5'>
       <div>
         <img alt='logo' className='pb-7' src={spotify_small} width={'70%'} />
-        {error ? (
-          <Error errorMessage={'in fetching the playlists'} />
-        ) : (
-          <div className='flex flex-col space-y-7 w-full'>
-            {!loading &&
-              data.getPlaylists.map((playlist) => (
-                <PlaylistRow
-                  key={playlist.id}
-                  title={playlist.title}
-                  playlistId={playlist.id}
-                />
-              ))}
-          </div>
-        )}
+        {children}
       </div>
       <img
         alt='profile-pic'
@@ -37,4 +23,40 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+const Sidebar = () => {
+  const { loading, error, data } = useQuery(GET_PLAYLISTS);
+
+  const [playList, setPlayList] = useState([]);
+
+  if (playList.length === 0) {
+    if (loading) {
+      return <Wrapper />;
+    } else if (data) {
+      setPlayList(data.getPlaylists);
+    }
+
+    if (error) {
+      return (
+        <Wrapper>
+          <Error errorMessage={'in fetching the playlists'} />
+        </Wrapper>
+      );
+    }
+  }
+
+  return (
+    <Wrapper>
+      <div className='flex flex-col space-y-7 w-full'>
+        {playList.map((playlist) => (
+          <PlaylistRow
+            key={playlist.id}
+            title={playlist.title}
+            playlistId={playlist.id}
+          />
+        ))}
+      </div>
+    </Wrapper>
+  );
+};
+
+export default React.memo(Sidebar);
