@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { SlPlaylist } from 'react-icons/sl';
+import { FaChevronCircleDown } from 'react-icons/fa';
 
 import spotify_small from '../../assets/spotify_small.png';
 import { GET_PLAYLISTS } from '../../queries/getQueries';
@@ -8,23 +8,22 @@ import PlaylistRow from './PlaylistRow';
 import Error from '../Error';
 import React, { useState } from 'react';
 
-const Wrapper = ({ children }) => {
-  const [open, setOpen] = useState(false);
+const Wrapper = ({ children, open, setOpen }) => {
+  //   const [open, setOpen] = useState(false);
 
   return (
     <div
-      className={`sidebar duration-300 h-full flex-[0.15] flex flex-col justify-between py-8 px-5 ${
-        !open && 'xl:-translate-x-[80%] bg-transparent'
-      } ${open && 'bg-black/[0.85]'} xl:z-10
-      }`}
+      className={`hidden sidebarMob duration-500 h-screen flex-[0.15] lg:flex flex-col justify-between py-8 px-5 w-full ${
+        open && '-translate-y-full'
+      }  -translate-x-5 bg-black/[0.85]`}
     >
       <div>
         <div className='flex items-center justify-between mb-7'>
           <img alt='logo' src={spotify_small} width={'70%'} />
-          <SlPlaylist
-            className='text-2xl cursor-pointer hidden xl:inline'
+          <FaChevronCircleDown
+            className='text-2xl cursor-pointer lg:inline'
             onClick={() => {
-              setOpen(!open);
+              setOpen(false);
             }}
           />
         </div>
@@ -39,7 +38,7 @@ const Wrapper = ({ children }) => {
   );
 };
 
-const Sidebar = () => {
+const SidebarMobile = ({ open, setOpen }) => {
   const { loading, error, data } = useQuery(GET_PLAYLISTS);
 
   const [playList, setPlayList] = useState([]);
@@ -61,7 +60,7 @@ const Sidebar = () => {
   }
 
   return (
-    <Wrapper>
+    <Wrapper open={open} setOpen={setOpen}>
       <div className='flex flex-col space-y-7 w-full'>
         {playList.map((playlist) => (
           <PlaylistRow
@@ -75,4 +74,4 @@ const Sidebar = () => {
   );
 };
 
-export default React.memo(Sidebar);
+export default React.memo(SidebarMobile);

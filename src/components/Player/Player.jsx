@@ -1,16 +1,20 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { SlList, SlPlaylist, SlShare } from 'react-icons/sl';
 
 import { bgAtom, errorAtom, songAtom } from '../../recoil/atoms';
 import no_song from '../../assets/no_song.webp';
 
 import PlayerConsole from './PlayerConsole';
 import { usePalette } from 'react-palette';
+import SidebarMobile from '../Sidebar/SidebarMobile';
 
 const Player = () => {
   const [currentSong, setCurrentSong] = useRecoilState(songAtom);
   const error = useRecoilValue(errorAtom);
   const [background, setBackground] = useRecoilState(bgAtom);
+
+  const [open, setOpen] = useState(false);
 
   const audioRef = useRef();
 
@@ -49,18 +53,18 @@ const Player = () => {
   };
 
   return (
-    <div className='player flex-[0.55] h-screen overflow-scroll p-5'>
+    <div className='player flex-[0.55] h-screen overflow-scroll p-5 xl:ml-10'>
       {!error.state && (
         <audio ref={audioRef} src={currentSong.url} onTimeUpdate={onPlaying} />
       )}
-
-      <div className='max-w-[50%] min-w-[17.5rem] mx-auto flex flex-col h-full justify-center space-y-10'>
+      <div className='lg:max-w-[70%] max-w-[50%] min-w-[17.5rem] mx-auto mb-5 flex flex-col h-full justify-center space-y-10'>
         <div className='songDetails'>
           <h1 className='text-4xl font-bold capitalize'>
             {!currentSong.title || error.state
               ? 'No song is playing'
               : currentSong.title}
           </h1>
+
           <h4 className='pt-2 text-gray-300'>
             {!currentSong.artist || error.state
               ? 'Artist name'
@@ -73,7 +77,20 @@ const Player = () => {
           className='rounded-md object-cover'
         />
         <PlayerConsole audio={audioRef} />
+        <div className='flex items-center justify-center space-x-24 text-2xl'>
+          {!open && (
+            <SlPlaylist
+              className='duration-500 cursor-pointer'
+              onClick={() => {
+                setOpen(true);
+              }}
+            />
+          )}
+          <SlShare />
+          <SlList />
+        </div>
       </div>
+      <SidebarMobile open={open} setOpen={setOpen} />
     </div>
   );
 };
