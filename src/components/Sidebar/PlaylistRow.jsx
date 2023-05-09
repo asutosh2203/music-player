@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
-import { playlistAtom } from '../../recoil/atoms';
+import { playlistAtom, songsListAtom } from '../../recoil/atoms';
 
 const PlaylistRow = ({ title, playlistId }) => {
   //state from recoil
   const [playlist, setPlaylist] = useRecoilState(playlistAtom);
-
+  const setSongsList = useSetRecoilState(songsListAtom);
   const [isSelected, setIsSelected] = useState(false);
 
   useEffect(() => {
@@ -20,6 +20,7 @@ const PlaylistRow = ({ title, playlistId }) => {
       } text-lg hover:text-white cursor-pointer `}
       onClick={() => {
         setPlaylist({ id: playlistId, title });
+        setSongsList({ songs: [] });
       }}
     >
       {title}
