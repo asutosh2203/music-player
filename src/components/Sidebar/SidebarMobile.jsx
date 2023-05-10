@@ -13,7 +13,7 @@ const Wrapper = ({ children, open, setOpen }) => {
 
   return (
     <div
-      className={`hidden sidebarMob duration-500 h-screen flex-[0.15] lg:flex flex-col justify-between py-8 px-5 w-full ${
+      className={`hidden overflow-scroll sidebarMob duration-500 h-screen flex-[0.15] lg:flex flex-col justify-between py-8 px-5 w-full ${
         open && '-translate-y-full'
       }  -translate-x-5 bg-black/[0.85]`}
     >

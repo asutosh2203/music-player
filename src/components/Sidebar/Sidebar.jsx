@@ -8,9 +8,7 @@ import PlaylistRow from './PlaylistRow';
 import Error from '../Error';
 import React, { useState } from 'react';
 
-const Wrapper = ({ children }) => {
-  const [open, setOpen] = useState(false);
-
+const Wrapper = ({ children, open, setOpen }) => {
   return (
     <div
       className={`sidebar duration-300 h-full flex-[0.15] flex flex-col justify-between py-8 px-5 ${
@@ -43,6 +41,7 @@ const Sidebar = () => {
   const { loading, error, data } = useQuery(GET_PLAYLISTS);
 
   const [playList, setPlayList] = useState([]);
+  const [open, setOpen] = useState(false);
 
   if (playList.length === 0) {
     if (loading) {
@@ -61,14 +60,17 @@ const Sidebar = () => {
   }
 
   return (
-    <Wrapper>
+    <Wrapper open={open} setOpen={setOpen}>
       <div className='flex flex-col space-y-7 w-full'>
         {playList.map((playlist) => (
-          <PlaylistRow
+          <div
             key={playlist.id}
-            title={playlist.title}
-            playlistId={playlist.id}
-          />
+            onClick={() => {
+              setOpen(false);
+            }}
+          >
+            <PlaylistRow title={playlist.title} playlistId={playlist.id} />
+          </div>
         ))}
       </div>
     </Wrapper>
