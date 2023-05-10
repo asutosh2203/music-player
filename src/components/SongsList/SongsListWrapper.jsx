@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import SearchInput from './SearchInput';
 import SongsList from './SongsList';
 import SongsListHeader from './SongsListHeader';

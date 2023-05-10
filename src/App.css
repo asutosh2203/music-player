@@ -26,6 +26,10 @@
     display: none;
   }
 
+  .songsListMob{
+    width: calc(100% + 40px);
+  }
+
   .songsListWrapper {
     display: none;
   }

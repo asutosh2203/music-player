@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { SlList, SlPlaylist, SlShare } from 'react-icons/sl';
 
 import { bgAtom, errorAtom, songAtom } from '../../recoil/atoms';
@@ -8,13 +8,15 @@ import no_song from '../../assets/no_song.webp';
 import PlayerConsole from './PlayerConsole';
 import { usePalette } from 'react-palette';
 import SidebarMobile from '../Sidebar/SidebarMobile';
+import SongsListMobile from '../SongsList/SongsListMobile';
 
 const Player = () => {
   const [currentSong, setCurrentSong] = useRecoilState(songAtom);
   const error = useRecoilValue(errorAtom);
-  const [background, setBackground] = useRecoilState(bgAtom);
+  const setBackground = useSetRecoilState(bgAtom);
 
-  const [open, setOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [songListOpen, setSongListOpen] = useState(false);
 
   const audioRef = useRef();
 
@@ -53,7 +55,7 @@ const Player = () => {
   };
 
   return (
-    <div className='player flex-[0.55] h-screen overflow-scroll p-5 xl:ml-10'>
+    <div className='player flex-[0.55] h-screen overflow-hidden p-5 xl:ml-10'>
       {!error.state && (
         <audio ref={audioRef} src={currentSong.url} onTimeUpdate={onPlaying} />
       )}
@@ -78,19 +80,31 @@ const Player = () => {
         />
         <PlayerConsole audio={audioRef} />
         <div className='flex items-center justify-center space-x-24 text-2xl'>
-          {!open && (
+          {!sidebarOpen && (
             <SlPlaylist
               className='duration-500 cursor-pointer'
               onClick={() => {
-                setOpen(true);
+                setSidebarOpen(true);
               }}
             />
           )}
-          <SlShare />
-          <SlList />
+          <SlShare className='cursor-pointer' />
+          {!songListOpen && (
+            <SlList
+              className='duration-500 cursor-pointer'
+              onClick={() => {
+                setSongListOpen(true);
+              }}
+            />
+          )}
         </div>
       </div>
-      <SidebarMobile open={open} setOpen={setOpen} />
+      <SidebarMobile
+        open={sidebarOpen}
+        setOpen={setSidebarOpen}
+        setSonglistOpen={setSongListOpen}
+      />
+      <SongsListMobile open={songListOpen} setOpen={setSongListOpen} />
     </div>
   );
 };

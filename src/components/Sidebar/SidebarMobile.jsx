@@ -19,7 +19,7 @@ const Wrapper = ({ children, open, setOpen }) => {
     >
       <div>
         <div className='flex items-center justify-between mb-7'>
-          <img alt='logo' src={spotify_small} width={'70%'} />
+          <img alt='logo' src={spotify_small} width={'50%'} />
           <FaChevronCircleDown
             className='text-2xl cursor-pointer lg:inline'
             onClick={() => {
@@ -38,7 +38,7 @@ const Wrapper = ({ children, open, setOpen }) => {
   );
 };
 
-const SidebarMobile = ({ open, setOpen }) => {
+const SidebarMobile = ({ open, setOpen, setSonglistOpen }) => {
   const { loading, error, data } = useQuery(GET_PLAYLISTS);
 
   const [playList, setPlayList] = useState([]);
@@ -63,11 +63,15 @@ const SidebarMobile = ({ open, setOpen }) => {
     <Wrapper open={open} setOpen={setOpen}>
       <div className='flex flex-col space-y-7 w-full'>
         {playList.map((playlist) => (
-          <PlaylistRow
+          <div
             key={playlist.id}
-            title={playlist.title}
-            playlistId={playlist.id}
-          />
+            onClick={() => {
+              setOpen(false);
+              setSonglistOpen(true);
+            }}
+          >
+            <PlaylistRow title={playlist.title} playlistId={playlist.id} />
+          </div>
         ))}
       </div>
     </Wrapper>
