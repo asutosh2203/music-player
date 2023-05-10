@@ -67,7 +67,7 @@ const Player = () => {
               : currentSong.title}
           </h1>
 
-          <h4 className='pt-2 text-gray-300'>
+          <h4 className='pt-2 text-xl text-gray-300'>
             {!currentSong.artist || error.state
               ? 'Artist name'
               : currentSong.artist}

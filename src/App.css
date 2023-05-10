@@ -46,4 +46,13 @@
   .songDetails {
     text-align: center;
   }
+
+  .songDetails h1{
+    font-size: 1.25rem;
+    line-height: 1.5rem;
+  }
+  .songDetails h4{
+    font-size: 1rem;
+    line-height: 1.75rem;
+  }
 }
