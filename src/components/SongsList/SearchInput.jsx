@@ -1,10 +1,11 @@
 import { useRef } from 'react';
 import { CiSearch } from 'react-icons/ci';
-import { useRecoilState } from 'recoil';
-import { searchAtom } from '../../recoil/atoms';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { searchAtom, songsListAtom } from '../../recoil/atoms';
 
 const SearchInput = () => {
   const [searchItem, setSearchItem] = useRecoilState(searchAtom);
+  const setSongsList = useSetRecoilState(songsListAtom);
 
   const inputRef = useRef(null);
 
@@ -19,6 +20,7 @@ const SearchInput = () => {
             return;
           }
           setSearchItem({ search: e.target.value });
+          setSongsList({ songs: [] });
         }}
         ref={inputRef}
         placeholder='Search Songs, Artists'
