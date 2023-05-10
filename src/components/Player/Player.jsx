@@ -79,7 +79,7 @@ const Player = () => {
           className='rounded-md object-cover'
         />
         <PlayerConsole audio={audioRef} />
-        <div className='flex items-center justify-center space-x-24 text-2xl'>
+        <div className='hidden lg:flex items-center justify-center space-x-24 text-2xl'>
           {!sidebarOpen && (
             <SlPlaylist
               className='duration-500 cursor-pointer'
